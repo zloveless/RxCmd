@@ -35,7 +35,7 @@ namespace RxCmd
 		public static void Main(string[] argv)
 		{
 			System.Console.Title = "RxCmd";
-			Console       = new ConsoleAdapter(System.Console.WriteLine);
+			Console              = new ConsoleAdapter(System.Console.Write);
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 			Compose();
