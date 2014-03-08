@@ -7,6 +7,7 @@
 namespace RxCmd.Commands
 {
 	using System;
+	using System.Linq;
 
 	public class SayCommand : ICommand
 	{
@@ -27,21 +28,21 @@ namespace RxCmd.Commands
 			get { return ""; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			if (Remote.Instance.State == Remote.RxState.Closed)
 			{
-				Console.WriteLine("Remote client not connected.");
+				Program.Console.WriteLine("Remote client not connected.");
 				return;
 			}
 
 			if (args.Length == 0)
 			{
-				Console.WriteLine("Usage: say <message>");
+				Program.Console.WriteLine("Usage: say <message>");
 				return;
 			}
 
-			Remote.Instance.ExecuteCommand("say {0}", args);
+			Remote.Instance.ExecuteCommand("say {0}", String.Join(" ", args));
 		}
 
 		#endregion

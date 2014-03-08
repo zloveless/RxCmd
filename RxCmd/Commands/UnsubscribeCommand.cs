@@ -27,7 +27,7 @@ namespace RxCmd.Commands
 			get { return "Unsubscribes from game events."; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			if (Remote.Instance.State == Remote.RxState.Closed)
 			{

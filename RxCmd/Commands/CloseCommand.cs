@@ -27,11 +27,11 @@ namespace RxCmd.Commands
 			get { throw new NotImplementedException(); }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			if (Remote.Instance.State != Remote.RxState.Open)
 			{
-				Console.WriteLine("Remote client already closed.");
+				Program.Console.WriteLine("Remote client already closed.");
 				return;
 			}
 

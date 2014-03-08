@@ -27,18 +27,20 @@ namespace RxCmd.Commands
 			get { return ""; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			if (Remote.Instance.State == Remote.RxState.Closed)
 			{
-				Console.WriteLine("Remote client not connected.");
+				Program.Console.WriteLine("Remote client not connected.");
 				return;
 			}
 
+			string[] argv = Array.ConvertAll(args, Convert.ToString);
+
 			int botsToAdd;
-			if (args.Length == 0 || !Int32.TryParse(args[0], out botsToAdd))
+			if (args.Length == 0 || !Int32.TryParse(argv[0], out botsToAdd))
 			{
-				Console.WriteLine("Usage: addbots <number>");
+				Program.Console.WriteLine("Usage: addbots <number>");
 				return;
 			}
 

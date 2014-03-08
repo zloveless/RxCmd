@@ -25,7 +25,7 @@ namespace RxCmd.Commands
 			get { return "Description of exit!"; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			Program.exit = true;
 		}

@@ -24,12 +24,14 @@ namespace RxCmd.Commands
 
 		public string Description
 		{
-			get { throw new NotImplementedException(); }
+			get { return ""; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
-			Console.WriteLine("Help triggered.");
+			// string[] argv = Array.ConvertAll(args, Convert.ToString);
+
+			Program.Console.WriteLine("Help triggered.");
 		}
 
 		#endregion

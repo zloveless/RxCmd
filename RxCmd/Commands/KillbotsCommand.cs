@@ -27,11 +27,11 @@ namespace RxCmd.Commands
 			get { return ""; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			if (Remote.Instance.State == Remote.RxState.Closed)
 			{
-				Console.WriteLine("Remote client not connected.");
+				Program.Console.WriteLine("Remote client not connected.");
 				return;
 			}
 

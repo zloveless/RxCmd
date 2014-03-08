@@ -18,13 +18,14 @@ namespace RxCmd
 		[ImportMany] private static IEnumerable<ICommand> commands;
 
 		internal static bool exit = false;
-		private static bool in_prompt;
-		private static bool in_command;
+		internal static bool in_prompt;
+		internal static bool in_command;
+		internal static IConsole Console;
 
 		private static void Compose()
 		{
 			var asm       = Assembly.GetAssembly(typeof(Program));
-			var catalog   = new AggregateCatalog(new AssemblyCatalog(asm));
+			var catalog   = new AggregateCatalog(new AssemblyCatalog(asm), new DirectoryCatalog("."));
 
 			var container = new CompositionContainer(catalog);
 
@@ -33,7 +34,8 @@ namespace RxCmd
 
 		public static void Main(string[] argv)
 		{
-			Console.Title = "RxCmd";
+			System.Console.Title = "RxCmd";
+			Console       = new ConsoleAdapter(System.Console.WriteLine);
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 			Compose();
@@ -42,7 +44,7 @@ namespace RxCmd
 			{
 				PrintConsole();
 
-				string line   = Console.ReadLine();
+				string line   = System.Console.ReadLine();
 				if (line != null)
 				{
 					in_prompt = false;
@@ -81,20 +83,20 @@ namespace RxCmd
 			{
 				if (in_prompt || in_command)
 				{
-					Console.Write('\n');
+					System.Console.Write('\n');
 				}
 
-				ConsoleColor c = Console.ForegroundColor;
-				Console.ForegroundColor = ConsoleColor.Red;
+				ConsoleColor c = System.Console.ForegroundColor;
+				System.Console.ForegroundColor = ConsoleColor.Red;
 
-				Console.WriteLine("Exception: {0}\n\nMessage: {1}", e.GetType().Name, e.Message);
-				Console.ForegroundColor = c;
+				Console.WriteLine("Exception: {0}\nMessage: {1}", e.GetType().Name, e.Message);
+				System.Console.ForegroundColor = c;
 			}
 		}
 		
 		public static void PrintConsole()
 		{
-			Console.Write(@"Rx:\> ");
+			System.Console.Write(@"Rx:\> ");
 
 			in_prompt = true;
 		}

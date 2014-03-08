@@ -67,17 +67,17 @@ namespace RxCmd
 		}
 
 		/// <summary>
-		/// Gets or sets a <see cref="T:System.String" /> value representing the host for the remote console.
+		/// Gets or sets a <see cref="T:System.String" /> value representing the host for the remote Console.
 		/// </summary>
 		public string Host { get; set; }
 
 		/// <summary>
-		/// Sets a <see cref="T:System.String" /> value representing the password for the remote console.
+		/// Sets a <see cref="T:System.String" /> value representing the password for the remote Console.
 		/// </summary>
 		public string Password { private get; set; }
 
 		/// <summary>
-		/// Gets or sets a <see cref="T:System.Int32" /> value representing the port for the remote console.
+		/// Gets or sets a <see cref="T:System.Int32" /> value representing the port for the remote Console.
 		/// </summary>
 		public int Port { get; set; }
 
@@ -243,7 +243,7 @@ namespace RxCmd
 		{
 			if (RequestOutput)
 			{
-				Console.WriteLine(message);
+				Program.Console.WriteLine(message);
 			}
 		}
 

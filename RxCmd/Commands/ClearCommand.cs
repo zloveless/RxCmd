@@ -23,10 +23,10 @@ namespace RxCmd.Commands
 
 		public string Description
 		{
-			get { return "Clears the console buffer."; }
+			get { return "Clears the Console buffer."; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			Console.Clear();
 		}

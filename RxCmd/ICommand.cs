@@ -17,6 +17,6 @@ namespace RxCmd
 
 		string Description { get; }
 
-		void Execute(params string[] args);
+		void Execute(params object[] args);
 	}
 }

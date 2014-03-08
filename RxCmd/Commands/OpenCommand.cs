@@ -7,6 +7,7 @@
 namespace RxCmd.Commands
 {
 	using System;
+	using System.Linq;
 	using System.Text;
 
 	public class OpenCommand : ICommand
@@ -28,28 +29,31 @@ namespace RxCmd.Commands
 			get { return "Description of open!"; }
 		}
 
-		public void Execute(params string[] args)
+		public void Execute(params object[] args)
 		{
 			if (Remote.Instance.State == Remote.RxState.Open)
 			{
-				Console.WriteLine("Connection already open. Please close the current connection before continuing.");
+				Program.Console.WriteLine("Connection already open. Please close the current connection before continuing.");
 				return;
 			}
 
 			// open <host> <port>
 			if (args.Length < 2 && !Remote.Instance.IsInitialized)
 			{
-				Console.WriteLine("Usage: open <host> <port>");
+				Program.Console.WriteLine("Usage: open <host> <port>");
 				return;
 			}
 
+			string[] argv = Array.ConvertAll(args, Convert.ToString);
+
 			if (!Remote.Instance.IsInitialized)
 			{
-				string host = args[0];
+				string host = argv[0];
 				int port;
-				if (!Int32.TryParse(args[1], out port))
+				if (!Int32.TryParse(argv[1], out port))
 				{
-					Console.WriteLine("Invalid port number: {0}", args[1]);
+					Program.Console.WriteLine("Invalid port number: {0}", args[1]);
+					return;
 				}
 
 				Remote.Instance.Host = host;
@@ -70,7 +74,7 @@ namespace RxCmd.Commands
 					}
 				} while (ki.Key != ConsoleKey.Enter);
 
-				Console.WriteLine();
+				Program.Console.WriteLine();
 
 				Remote.Instance.Password      = builder.ToString();
 			}
