@@ -7,7 +7,7 @@
 namespace RxCmd.Commands
 {
 	using System;
-	using System.Linq;
+	using Shared;
 
 	public class SayCommand : ICommand
 	{
@@ -42,7 +42,9 @@ namespace RxCmd.Commands
 				return;
 			}
 
-			Remote.Instance.ExecuteCommand("say {0}", String.Join(" ", args));
+			string message = string.Format("say {0}", String.Join(" ", args));
+
+			Remote.Instance.Protocol.Execute(message);
 		}
 
 		#endregion

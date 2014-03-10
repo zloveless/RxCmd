@@ -12,6 +12,7 @@ namespace RxCmd
 	using System.ComponentModel.Composition.Hosting;
 	using System.Linq;
 	using System.Reflection;
+	using Shared;
 
 	public class Program
 	{
@@ -38,8 +39,10 @@ namespace RxCmd
 			Console              = new ConsoleAdapter(System.Console.Write);
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+			
 			Compose();
 
+			ProtocolManager.Load();
 			do
 			{
 				PrintConsole();
@@ -58,7 +61,7 @@ namespace RxCmd
 						if (c.Name.Equals(command, StringComparison.OrdinalIgnoreCase) ||
 						    c.Aliases.Any(x => x.Equals(command, StringComparison.OrdinalIgnoreCase)))
 						{
-							string[] args = line.Split(' ').Skip(1).ToArray();
+							object[] args = line.Split(' ').Skip(1).Cast<Object>().ToArray();
 
 							in_command = true;
 							c.Execute(args);

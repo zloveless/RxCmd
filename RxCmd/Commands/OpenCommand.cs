@@ -7,8 +7,8 @@
 namespace RxCmd.Commands
 {
 	using System;
-	using System.Linq;
 	using System.Text;
+	using Shared;
 
 	public class OpenCommand : ICommand
 	{
@@ -31,55 +31,48 @@ namespace RxCmd.Commands
 
 		public void Execute(params object[] args)
 		{
-			if (Remote.Instance.State == Remote.RxState.Open)
+			if (Remote.Instance.State == Remote.RxState.Opened)
 			{
-				Program.Console.WriteLine("Connection already open. Please close the current connection before continuing.");
+				Program.Console.WriteLine("A connection is already open. Close the current connection before connecting somewhere else.");
 				return;
 			}
 
 			// open <host> <port>
-			if (args.Length < 2 && !Remote.Instance.IsInitialized)
+			// todo: alternative command: open host:port
+			if (args.Length < 2)
 			{
 				Program.Console.WriteLine("Usage: open <host> <port>");
 				return;
 			}
 
 			string[] argv = Array.ConvertAll(args, Convert.ToString);
+			string host   = argv[0];
 
-			if (!Remote.Instance.IsInitialized)
+			int port;
+			if (!Int32.TryParse(argv[1], out port))
 			{
-				string host = argv[0];
-				int port;
-				if (!Int32.TryParse(argv[1], out port))
-				{
-					Program.Console.WriteLine("Invalid port number: {0}", args[1]);
-					return;
-				}
-
-				Remote.Instance.Host = host;
-				Remote.Instance.Port = port;
-
-				Console.Write("Enter password: ");
-
-				StringBuilder builder = new StringBuilder();
-				ConsoleKeyInfo ki;
-				do
-				{
-					ki = Console.ReadKey(true);
-				
-					if (!char.IsControl(ki.KeyChar) && ki.Key != ConsoleKey.Backspace)
-					{
-						builder.Append(ki.KeyChar);
-						Console.Write('*');
-					}
-				} while (ki.Key != ConsoleKey.Enter);
-
-				Program.Console.WriteLine();
-
-				Remote.Instance.Password      = builder.ToString();
+				Program.Console.WriteLine("Invalid port number: {0}", args[1]);
+				return;
 			}
+			
+			Console.Write("Enter password: ");
 
-			Remote.Instance.Connect();
+			StringBuilder builder = new StringBuilder();
+			ConsoleKeyInfo ki;
+			do
+			{
+				ki = Console.ReadKey(true);
+
+				if (!char.IsControl(ki.KeyChar) && ki.Key != ConsoleKey.Backspace)
+				{
+					builder.Append(ki.KeyChar);
+					Console.Write('*');
+				}
+			} while (ki.Key != ConsoleKey.Enter);
+
+			Program.Console.WriteLine();
+
+			Remote.Instance.Connect(host, port, builder.ToString());
 		}
 
 		#endregion

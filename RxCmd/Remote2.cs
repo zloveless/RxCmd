@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------
-//  <copyright file="Remote.cs" company="Zack Loveless">
+//  <copyright file="Remote2.cs" company="Zack Loveless">
 //      Copyright (c) Zack Loveless.  All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------------
@@ -7,35 +7,42 @@
 namespace RxCmd
 {
 	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel.Composition;
+	using System.ComponentModel.Composition.Hosting;
 	using System.IO;
 	using System.Net;
 	using System.Net.Sockets;
+	using System.Reflection;
 	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Shared;
 
-	public delegate void RxLogReceiveCallback(string logMessage);
-
-	public class Remote
+	public class Remote2
 	{
-		private static Remote instance;
+		private static Remote2 instance;
 
-		public static Remote Instance
+		public static Remote2 Instance
 		{
-			get { return instance ?? (instance = new Remote()); }
+			get { return instance ?? (instance = new Remote2()); }
 		}
 
-		private Remote()
+		private Remote2()
 		{
 			State             = RxState.Closed;
 			RxRemoteLogEvent += OnLogRead;
 			source            = new CancellationTokenSource();
+
+			Compose();
 		}
 
-		~Remote()
+		~Remote2()
 		{
 			source.Cancel();
 		}
+
+		[ImportMany] private IEnumerable<Lazy<IRxProtocol, IRxProtocolAttribute>> protocols;
 
 		private TcpClient client;
 		private Encoding encoding;
@@ -117,6 +124,16 @@ namespace RxCmd
 			}
 		}
 
+		private void Compose()
+		{
+			var asm = Assembly.GetAssembly(typeof(Program));
+			var catalog = new AggregateCatalog(new AssemblyCatalog(asm), new DirectoryCatalog("."));
+
+			var container = new CompositionContainer(catalog);
+
+			protocols = container.GetExports<IRxProtocol, IRxProtocolAttribute>();
+		}
+
 		public void Connect()
 		{
 			if (State == RxState.Open) return;
@@ -158,7 +175,7 @@ namespace RxCmd
 				}
 				else
 				{
-					throw new RxRemoteException("Remote server version unknown.",
+					throw new RxRemoteException("Remote2 server version unknown.",
 						new NotSupportedException(
 							"Server could be running a newer version of the protocol that this client doesn't support."));
 				}

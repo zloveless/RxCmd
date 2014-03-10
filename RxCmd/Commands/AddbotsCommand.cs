@@ -7,6 +7,7 @@
 namespace RxCmd.Commands
 {
 	using System;
+	using Shared;
 
 	public class AddbotsCommand : ICommand
 	{
@@ -44,7 +45,7 @@ namespace RxCmd.Commands
 				return;
 			}
 
-			Remote.Instance.ExecuteCommand("addbots {0}", botsToAdd);
+			Remote.Instance.Protocol.Execute(string.Format("addbots {0}", botsToAdd));
 		}
 
 		#endregion

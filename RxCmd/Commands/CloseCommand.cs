@@ -7,6 +7,7 @@
 namespace RxCmd.Commands
 {
 	using System;
+	using Shared;
 
 	public class CloseCommand : ICommand
 	{
@@ -29,7 +30,7 @@ namespace RxCmd.Commands
 
 		public void Execute(params object[] args)
 		{
-			if (Remote.Instance.State != Remote.RxState.Open)
+			if (Remote.Instance.State != Remote.RxState.Opened)
 			{
 				Program.Console.WriteLine("Remote client already closed.");
 				return;

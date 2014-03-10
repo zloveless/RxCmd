@@ -1,4 +1,4 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("RxCmd")]
+[assembly: AssemblyTitle("RxCmd.Protocol")]
 [assembly: AssemblyDescription("")]

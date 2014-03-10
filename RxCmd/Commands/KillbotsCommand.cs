@@ -6,7 +6,7 @@
 
 namespace RxCmd.Commands
 {
-	using System;
+	using Shared;
 
 	public class KillbotsCommand : ICommand
 	{
@@ -35,7 +35,7 @@ namespace RxCmd.Commands
 				return;
 			}
 
-			Remote.Instance.ExecuteCommand("killbots");
+			Remote.Instance.Protocol.Execute("killbots");
 		}
 
 		#endregion

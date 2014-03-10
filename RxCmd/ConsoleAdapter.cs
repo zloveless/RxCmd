@@ -6,6 +6,8 @@
 
 namespace RxCmd
 {
+	using Shared;
+
 	public delegate void ConsoleWriteDelegate(string arg0);
 
 	public class ConsoleAdapter : IConsole

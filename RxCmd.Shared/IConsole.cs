@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
-namespace RxCmd
+namespace RxCmd.Shared
 {
 	public interface IConsole
 	{

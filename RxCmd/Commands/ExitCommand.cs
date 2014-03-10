@@ -6,6 +6,8 @@
 
 namespace RxCmd.Commands
 {
+	using Shared;
+
 	public class ExitCommand : ICommand
 	{
 		#region Implementation of ICommand

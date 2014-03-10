@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
-namespace RxCmd
+namespace RxCmd.Shared
 {
 	using System.ComponentModel.Composition;
 

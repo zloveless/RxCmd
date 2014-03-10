@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7CE917D5-5F65-4FEB-86C4-718D1888DAE2}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{436D7B0D-793B-4835-B5D6-518D335564DF}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RxCmd</RootNamespace>
-    <AssemblyName>RxCmd</AssemblyName>
+    <RootNamespace>RxCmd.Protocol</RootNamespace>
+    <AssemblyName>RxCmd.Protocol</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\build\Release\</OutputPath>
@@ -31,35 +29,17 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>renx.ico</ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands\AddbotsCommand.cs" />
-    <Compile Include="Commands\ClearCommand.cs" />
-    <Compile Include="Commands\CloseCommand.cs" />
-    <Compile Include="Commands\ExitCommand.cs" />
-    <Compile Include="Commands\HelpCommand.cs" />
-    <Compile Include="Commands\KillbotsCommand.cs" />
-    <Compile Include="Commands\OpenCommand.cs" />
-    <Compile Include="Commands\SayCommand.cs" />
-    <Compile Include="Commands\SubscribeCommand.cs" />
-    <Compile Include="Commands\UnsubscribeCommand.cs" />
-    <Compile Include="ConsoleAdapter.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="renx.ico" />
+    <Compile Include="RxVersionOne.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RxCmd.Shared\RxCmd.Shared.csproj">

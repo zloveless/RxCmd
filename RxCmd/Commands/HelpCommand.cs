@@ -6,7 +6,7 @@
 
 namespace RxCmd.Commands
 {
-	using System;
+	using Shared;
 
 	public class HelpCommand : ICommand
 	{

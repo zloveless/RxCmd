@@ -6,7 +6,7 @@
 
 namespace RxCmd.Commands
 {
-	using System;
+	using Shared;
 
 	public class SubscribeCommand : ICommand
 	{
@@ -35,8 +35,7 @@ namespace RxCmd.Commands
 				return;
 			}
 
-			Remote.Instance.Subscribe();
-			Remote.Instance.RequestOutput = true;
+			Remote.Instance.Protocol.Subscribe();
 		}
 
 		#endregion

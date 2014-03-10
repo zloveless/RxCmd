@@ -7,6 +7,7 @@
 namespace RxCmd.Commands
 {
 	using System;
+	using Shared;
 
 	public class UnsubscribeCommand : ICommand
 	{
@@ -35,8 +36,8 @@ namespace RxCmd.Commands
 				return;
 			}
 
-			Remote.Instance.RequestOutput = false;
-			Remote.Instance.Unsubscribe();
+			Remote.Instance.Protocol.Unsubscribe();
+			
 		}
 
 		#endregion
