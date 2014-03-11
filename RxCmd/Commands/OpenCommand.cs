@@ -37,24 +37,50 @@ namespace RxCmd.Commands
 				return;
 			}
 
+			string[] argv = Array.ConvertAll(args, Convert.ToString);
+
 			// open <host> <port>
-			// todo: alternative command: open host:port
-			if (args.Length < 2)
+			if (argv.Length < 2 && !argv[0].Contains(":"))
+			{
+				Program.Console.WriteLine("Usage: open <host> <port>");
+				return;
+			}
+			
+			if (argv.Length < 2)
 			{
 				Program.Console.WriteLine("Usage: open <host> <port>");
 				return;
 			}
 
-			string[] argv = Array.ConvertAll(args, Convert.ToString);
-			string host   = argv[0];
-
+			string host;
 			int port;
-			if (!Int32.TryParse(argv[1], out port))
+			if (argv[0].Contains(":"))
 			{
-				Program.Console.WriteLine("Invalid port number: {0}", args[1]);
+				string[] parts = argv[0].Split(':');
+				host = parts[0];
+
+				if (!Int32.TryParse(parts[1], out port))
+				{
+					Program.Console.WriteLine("Invalid port number: {0}", args[1]);
+					return;
+				}
+			}
+			else
+			{
+				host = argv[0];
+				if (!Int32.TryParse(argv[1], out port))
+				{
+					Program.Console.WriteLine("Invalid port number: {0}", args[1]);
+					return;
+				}
+			}
+
+			if (port == 0)
+			{
+				Program.Console.WriteLine("No port number specified.");
 				return;
 			}
-			
+
 			Console.Write("Enter password: ");
 
 			StringBuilder builder = new StringBuilder();
@@ -69,6 +95,12 @@ namespace RxCmd.Commands
 					Console.Write('*');
 				}
 			} while (ki.Key != ConsoleKey.Enter);
+
+			int i      = Program.random.Next(10);
+			for (int j = 0; j <= i; ++j)
+			{
+				Console.Write('*');
+			}
 
 			Program.Console.WriteLine();
 

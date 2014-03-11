@@ -14,8 +14,13 @@ namespace RxCmd
 	using System.Reflection;
 	using Shared;
 
+	// ReSharper disable RedundantNameQualifier
+	// ReSharper disable InconsistentNaming
+
 	public class Program
 	{
+		internal static Random random = new Random(Guid.NewGuid().GetHashCode());
+
 		[ImportMany] private static IEnumerable<ICommand> commands;
 
 		internal static bool exit = false;
@@ -36,7 +41,7 @@ namespace RxCmd
 		public static void Main(string[] argv)
 		{
 			System.Console.Title = "RxCmd";
-			Console              = new ConsoleAdapter(System.Console.Write);
+			Program.Console      = new ConsoleAdapter(System.Console.Write);
 
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 			

@@ -19,7 +19,7 @@ namespace RxCmd.Commands
 
 		public string[] Aliases
 		{
-			get { return new[] {"?"}; }
+			get { return new[] {"?", "man"}; }
 		}
 
 		public string Description
