@@ -39,8 +39,6 @@ namespace RxCmd.Commands
 
 			string[] argv = Array.ConvertAll(args, Convert.ToString);
 
-			// open <host> <port>
-
 			string host;
 			int port;
 			if (argv.Length >= 1 && argv[0].Contains(":"))

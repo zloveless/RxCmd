@@ -6,11 +6,13 @@
 
 namespace RxCmd.Shared
 {
-	public delegate void RxLogReceiveCallback(string logMessage);
+	using System;
 
 	public interface IRxProtocol
 	{
-		event RxLogReceiveCallback RxLogRead;
+		event EventHandler<RxLogEventArgs> RxLog;
+
+		event EventHandler<RxLogEventArgs> RxError;
 
 		void Authorize(string password);
 

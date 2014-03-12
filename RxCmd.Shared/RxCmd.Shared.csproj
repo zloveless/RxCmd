@@ -45,6 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolManager.cs" />
     <Compile Include="Remote.cs" />
+    <Compile Include="RxLogEventArgs.cs" />
     <Compile Include="RxProtocolAttribute.cs" />
     <Compile Include="RxProtocolVersionAttribute.cs" />
     <Compile Include="RxProtocolBase.cs" />

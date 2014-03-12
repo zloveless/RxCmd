@@ -6,12 +6,21 @@
 
 namespace RxCmd.Protocol
 {
+	using System;
 	using Shared;
 
 	[RxProtocol, RxProtocolVersion("v001")]
 	public class RxVersionOne : RxProtocolBase
 	{
+		public RxVersionOne()
+		{
+			Remote.Instance.RxDataReceiveCallback += LogRead;
+		}
+		
 		#region Overrides of RxProtocolBase
+
+		public override event EventHandler<RxLogEventArgs> RxLog;
+		public override event EventHandler<RxLogEventArgs> RxError;
 
 		public override void Authorize(string password)
 		{
@@ -36,5 +45,25 @@ namespace RxCmd.Protocol
 		}
 
 		#endregion
+
+		private void LogRead(string x)
+		{
+			if (x.Substring(0, 1) == "l")
+			{
+				var handler = RxLog;
+				if (handler != null)
+				{
+					handler(this, new RxLogEventArgs(x.Substring(1)));
+				}
+			}
+			else if (x.Substring(0, 1) == "e")
+			{
+				var handler = RxError;
+				if (handler != null)
+				{
+					handler(this, new RxLogEventArgs(x.Substring(1)));
+				}
+			}
+		}
 	}
 }

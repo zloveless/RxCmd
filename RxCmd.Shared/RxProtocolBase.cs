@@ -6,27 +6,14 @@
 
 namespace RxCmd.Shared
 {
+	using System;
+
 	public abstract class RxProtocolBase : IRxProtocol
 	{
-		protected RxProtocolBase()
-		{
-			Remote.Instance.RxDataReceiveCallback += LogRead;
-		}
-
-		private void LogRead(string x)
-		{
-			if (x.Substring(0, 1) == "l")
-			{
-				if (RxLogRead != null)
-				{
-					RxLogRead(x.Substring(1));
-				}
-			}
-		}
-
 		#region Implementation of IRxProtocol
 
-		public event RxLogReceiveCallback RxLogRead;
+		public abstract event EventHandler<RxLogEventArgs> RxLog;
+		public abstract event EventHandler<RxLogEventArgs> RxError;
 
 		public abstract void Authorize(string password);
 
