@@ -40,21 +40,10 @@ namespace RxCmd.Commands
 			string[] argv = Array.ConvertAll(args, Convert.ToString);
 
 			// open <host> <port>
-			if (argv.Length < 2 && !argv[0].Contains(":"))
-			{
-				Program.Console.WriteLine("Usage: open <host> <port>");
-				return;
-			}
-			
-			if (argv.Length < 2)
-			{
-				Program.Console.WriteLine("Usage: open <host> <port>");
-				return;
-			}
 
 			string host;
 			int port;
-			if (argv[0].Contains(":"))
+			if (argv.Length >= 1 && argv[0].Contains(":"))
 			{
 				string[] parts = argv[0].Split(':');
 				host = parts[0];
@@ -64,6 +53,11 @@ namespace RxCmd.Commands
 					Program.Console.WriteLine("Invalid port number: {0}", args[1]);
 					return;
 				}
+			}
+			else if (argv.Length < 2)
+			{
+				Program.Console.WriteLine("Usage: open <host> <port>");
+				return;
 			}
 			else
 			{
@@ -96,8 +90,8 @@ namespace RxCmd.Commands
 				}
 			} while (ki.Key != ConsoleKey.Enter);
 
-			int i      = Program.random.Next(10);
-			for (int j = 0; j <= i; ++j)
+			int count  = Program.random.Next(10);
+			for (int i = 0; i <= count; ++i)
 			{
 				Console.Write('*');
 			}

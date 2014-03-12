@@ -49,10 +49,10 @@ namespace RxCmd.Shared
 
 		~Remote()
 		{
-			client.Close();
-			source.Dispose();
+			if (client != null) client.Close();
+			if (source != null) source.Dispose();
 
-			source = null;
+			source   = null;
 			Protocol = null;
 		}
 
