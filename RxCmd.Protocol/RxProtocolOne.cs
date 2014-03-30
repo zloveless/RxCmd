@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------
-//  <copyright file="RxVersionOne.cs" company="Zack Loveless">
+//  <copyright file="RxProtocolOne.cs" company="Zack Loveless">
 //      Copyright (c) Zack Loveless.  All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------------
@@ -10,9 +10,9 @@ namespace RxCmd.Protocol
 	using Shared;
 
 	[RxProtocol, RxProtocolVersion("v001")]
-	public class RxVersionOne : RxProtocolBase
+	public class RxProtocolOne : RxProtocolBase
 	{
-		public RxVersionOne()
+		public RxProtocolOne()
 		{
 			Remote.Instance.RxDataReceiveCallback += LogRead;
 		}

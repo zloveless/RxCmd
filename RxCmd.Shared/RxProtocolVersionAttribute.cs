@@ -9,8 +9,7 @@ namespace RxCmd.Shared
 	using System;
 	using System.ComponentModel.Composition;
 
-	[MetadataAttribute]
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	[MetadataAttribute, AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 	public class RxProtocolVersionAttribute : Attribute, IRxProtocolAttribute
 	{
 		public RxProtocolVersionAttribute(string version)
