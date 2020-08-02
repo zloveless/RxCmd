@@ -4,227 +4,215 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace RxCmd.Shared
 {
-	using System;
-	using System.IO;
-	using System.Net;
-	using System.Net.Sockets;
-	using System.Text;
-	using System.Threading;
-	using System.Threading.Tasks;
+    public delegate void RxReceiveCallback(string message);
 
-	public delegate void RxReceiveCallback(string message);
+    public class Remote
+    {
+        #region Nested type: RxState
 
-	public class Remote
-	{
-		#region Singleton
+        [Flags]
+        public enum RxState : byte
+        {
+            Closed = 0,
+            Opened = 1,
+            Subscribed = 2
+        }
 
-		private static Remote instance;
+        #endregion
 
-		/// <summary>
-		/// Represents a singleton instance of the Remote class.
-		/// </summary>
-		public static Remote Instance
-		{
-			get { return instance ?? (instance = new Remote()); }
-		}
+        public Remote()
+        {
+            source = new CancellationTokenSource();
 
-		#endregion
+            source.Token.Register(() =>
+            {
+                client.Close();
 
-		public Remote()
-		{
-			source = new CancellationTokenSource();
+                // TODO: Unhack this and come up with a proper solution.
+                instance = null;
+            });
 
-			source.Token.Register(() =>
-			                      {
-				                      client.Close();
+            RxDataReceiveCallback += OnDataRead;
+        }
 
-									  // TODO: Unhack this and come up with a proper solution.
-				                      instance = null;
-			                      });
+        ~Remote()
+        {
+            if (client != null) client.Close();
+            if (source != null) source.Dispose();
 
-			RxDataReceiveCallback += OnDataRead;
-		}
+            source = null;
+            Protocol = null;
+        }
 
-		~Remote()
-		{
-			if (client != null) client.Close();
-			if (source != null) source.Dispose();
+        #region Events
 
-			source   = null;
-			Protocol = null;
-		}
+        public event RxReceiveCallback RxDataReceiveCallback;
 
-		#region Fields
+        #endregion
 
-		internal TcpClient client;
-		private Encoding encoding;
-		private StreamReader reader;
-		private CancellationTokenSource source;
-		private Stream stream;
-		private EventWaitHandle wait;
-		private StreamWriter writer;
+        #region Singleton
 
-		#endregion
+        private static Remote instance;
 
-		#region Events
+        /// <summary>
+        ///     Represents a singleton instance of the Remote class.
+        /// </summary>
+        public static Remote Instance => instance ?? (instance = new Remote());
 
-		public event RxReceiveCallback RxDataReceiveCallback;
-		
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Fields
 
-		/// <summary>
-		/// Gets an instance of the current protocol.
-		/// </summary>
-		public IRxProtocol Protocol { get; private set; }
+        internal TcpClient client;
+        private Encoding encoding;
+        private StreamReader reader;
+        private CancellationTokenSource source;
+        private Stream stream;
+        private EventWaitHandle wait;
+        private StreamWriter writer;
 
-		public RxState State { get; set; }
+        #endregion
 
-		#endregion
-		
-		#region Methods
+        #region Properties
 
-		private void AuthCallback(string x)
-		{
-			if (x.Substring(0, 1) == "v")
-			{
-				string version = x.Substring(0, 4);
+        /// <summary>
+        ///     Gets an instance of the current protocol.
+        /// </summary>
+        public IRxProtocol Protocol { get; private set; }
 
-				// *prays that this versioning system doesn't go away*
+        public RxState State { get; set; }
 
-				IRxProtocol p;
-				if (!ProtocolManager.TryGetProtocol(version, out p))
-				{
-					throw new RxRemoteException(
-						"Unknown version detected from server. This likely means the server is running a newer protocol version than this client supports.");
-				}
+        #endregion
 
-				Protocol = p;
+        #region Methods
 
-				State |= RxState.Opened;
+        private void AuthCallback(string x)
+        {
+            if (x.Substring(0, 1) == "v")
+            {
+                var version = x.Substring(0, 4);
 
-				RxDataReceiveCallback -= AuthCallback;
-				wait.Set();
-			}
-		}
+                // *prays that this versioning system doesn't go away*
 
-		/// <summary>
-		/// Connects to a Renegade-X server on the specified host and port using the specified password.
-		/// </summary>
-		/// <param name="host"></param>
-		/// <param name="port"></param>
-		/// <param name="password"></param>
-		/// <exception cref="System.ArgumentException" />
-		/// <exception cref="System.ArgumentNullException" />
-		/// <exception cref="RxCmd.Shared.RxRemoteException" />
-		public void Connect(string host, int port, string password)
-		{
-			if (host == null) throw new ArgumentNullException("host");
-			if (password == null) throw new ArgumentNullException("password");
-			if (port <= 0) throw new ArgumentException("port");
+                IRxProtocol p;
+                if (!ProtocolManager.TryGetProtocol(version, out p))
+                    throw new RxRemoteException(
+                        "Unknown version detected from server. This likely means the server is running a newer protocol version than this client supports.");
 
-			try
-			{
-				IPAddress address;
-				if (!IPAddress.TryParse(host, out address))
-				{
-					var entry = Dns.GetHostEntry(host);
-					address   = entry.AddressList[0];
-				}
+                Protocol = p;
 
-				client = new TcpClient();
-				client.Connect(new IPEndPoint(address, port));
+                State |= RxState.Opened;
 
-				RxDataReceiveCallback += AuthCallback;
+                RxDataReceiveCallback -= AuthCallback;
+                wait.Set();
+            }
+        }
 
-				InitializeStream();
+        /// <summary>
+        ///     Connects to a Renegade-X server on the specified host and port using the specified password.
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="port"></param>
+        /// <param name="password"></param>
+        /// <exception cref="System.ArgumentException" />
+        /// <exception cref="System.ArgumentNullException" />
+        /// <exception cref="RxCmd.Shared.RxRemoteException" />
+        public void Connect(string host, int port, string password)
+        {
+            if (host == null) throw new ArgumentNullException("host");
+            if (password == null) throw new ArgumentNullException("password");
+            if (port <= 0) throw new ArgumentException("port");
 
-				wait = new EventWaitHandle(false, EventResetMode.ManualReset);
-				if (wait.WaitOne(TimeSpan.FromSeconds(5.0)))
-				{
-					Protocol.Authorize(password);
-				}
-			}
-			catch (SocketException e)
-			{
-				throw new RxRemoteException("Unable to establish connection to remote server. See inner exception for details.", e);
-			}
-		}
+            try
+            {
+                IPAddress address;
+                if (!IPAddress.TryParse(host, out address))
+                {
+                    var entry = Dns.GetHostEntry(host);
+                    address = entry.AddressList[0];
+                }
 
-		public void Close()
-		{
-			if (State == RxState.Closed || client == null) return;
+                client = new TcpClient();
+                client.Connect(new IPEndPoint(address, port));
 
-			source.Cancel();
-		}
+                RxDataReceiveCallback += AuthCallback;
 
-		private void InitializeStream()
-		{
-			stream   = client.GetStream();
-			encoding = new UTF8Encoding(false);
+                InitializeStream();
 
-			reader = new StreamReader(stream, encoding);
-			writer = new StreamWriter(stream, encoding);
+                wait = new EventWaitHandle(false, EventResetMode.ManualReset);
+                if (wait.WaitOne(TimeSpan.FromSeconds(5.0))) Protocol.Authorize(password);
+            }
+            catch (SocketException e)
+            {
+                throw new RxRemoteException(
+                    "Unable to establish connection to remote server. See inner exception for details.", e);
+            }
+        }
 
-			reader.ReadLineAsync().ContinueWith(OnAsyncRead, source.Token);
-		}
+        public void Close()
+        {
+            if (State == RxState.Closed || client == null) return;
 
-		protected virtual void OnAsyncRead(Task<String> task)
-		{
-			if (task.Result != null && !task.IsFaulted && !task.IsCanceled)
-			{
-				if (RxDataReceiveCallback != null)
-				{
-					RxDataReceiveCallback(task.Result);
-				}
+            source.Cancel();
+        }
 
-				reader.ReadLineAsync().ContinueWith(OnAsyncRead, source.Token);
-			}
-			else if (task.Exception != null)
-			{
-				throw new RxRemoteException(
-					"An error occurred reading from the remote client. See inner exception for more details.",
-					task.Exception);
-			}
-			else if (task.IsCanceled)
-			{
-				State = RxState.Closed;
-				client.Close();
-			}
-		}
+        private void InitializeStream()
+        {
+            stream = client.GetStream();
+            encoding = new UTF8Encoding(false);
 
-		private void OnDataRead(string message)
-		{
-			if (message.Substring(0, 1) == "e")
-			{
-				throw new RxRemoteException(string.Format("A protocol error has occurred: {0}", message.Substring(1)));
-			}
-		}
+            reader = new StreamReader(stream, encoding);
+            writer = new StreamWriter(stream, encoding);
 
-		public void WriteLine(string format, params object[] args)
-		{
-			if (writer != null)
-			{
-				writer.WriteLine(format, args);
-				writer.Flush();
-			}
-		}
+            reader.ReadLineAsync().ContinueWith(OnAsyncRead, source.Token);
+        }
 
-		#endregion
+        protected virtual void OnAsyncRead(Task<string> task)
+        {
+            if (task.Result != null && !task.IsFaulted && !task.IsCanceled)
+            {
+                if (RxDataReceiveCallback != null) RxDataReceiveCallback(task.Result);
 
-		#region Nested type: RxState
+                reader.ReadLineAsync().ContinueWith(OnAsyncRead, source.Token);
+            }
+            else if (task.Exception != null)
+            {
+                throw new RxRemoteException(
+                    "An error occurred reading from the remote client. See inner exception for more details.",
+                    task.Exception);
+            }
+            else if (task.IsCanceled)
+            {
+                State = RxState.Closed;
+                client.Close();
+            }
+        }
 
-		[Flags]
-		public enum RxState : byte
-		{
-			Closed     = 0,
-			Opened     = 1,
-			Subscribed = 2,
-		}
+        private void OnDataRead(string message)
+        {
+            if (message.Substring(0, 1) == "e")
+                throw new RxRemoteException(string.Format("A protocol error has occurred: {0}", message.Substring(1)));
+        }
 
-		#endregion
-	}
+        public void WriteLine(string format, params object[] args)
+        {
+            if (writer != null)
+            {
+                writer.WriteLine(format, args);
+                writer.Flush();
+            }
+        }
+
+        #endregion
+    }
 }

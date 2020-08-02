@@ -1,19 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RxCmd", "RxCmd\RxCmd.csproj", "{7CE917D5-5F65-4FEB-86C4-718D1888DAE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxCmd", "RxCmd\RxCmd.csproj", "{7CE917D5-5F65-4FEB-86C4-718D1888DAE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RxCmd.Shared", "RxCmd.Shared\RxCmd.Shared.csproj", "{C2DE26E7-A471-45F9-A8FB-85221D2A4B6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxCmd.Shared", "RxCmd.Shared\RxCmd.Shared.csproj", "{C2DE26E7-A471-45F9-A8FB-85221D2A4B6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F9F65E2E-CEC9-4AF2-A86B-42D563DEC0CB}"
 	ProjectSection(SolutionItems) = preProject
-		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RxCmd.Protocol", "RxCmd.Protocol\RxCmd.Protocol.csproj", "{436D7B0D-793B-4835-B5D6-518D335564DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RxCmd.Protocol", "RxCmd.Protocol\RxCmd.Protocol.csproj", "{436D7B0D-793B-4835-B5D6-518D335564DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A9B809CB-DE55-4CD6-9955-DEEC4204BD50}
 	EndGlobalSection
 EndGlobal

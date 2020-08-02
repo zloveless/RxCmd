@@ -4,23 +4,24 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using System;
+using System.ComponentModel.Composition;
+
 namespace RxCmd.Shared
 {
-	using System;
-	using System.ComponentModel.Composition;
+    [MetadataAttribute]
+    [AttributeUsage(AttributeTargets.Class)]
+    public class RxProtocolVersionAttribute : Attribute, IRxProtocolAttribute
+    {
+        public RxProtocolVersionAttribute(string version)
+        {
+            Version = version;
+        }
 
-	[MetadataAttribute, AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class RxProtocolVersionAttribute : Attribute, IRxProtocolAttribute
-	{
-		public RxProtocolVersionAttribute(string version)
-		{
-			Version = version;
-		}
+        #region Implementation of IRxProtocolAttribute
 
-		#region Implementation of IRxProtocolAttribute
+        public string Version { get; }
 
-		public string Version { get; private set; }
-
-		#endregion
-	}
+        #endregion
+    }
 }

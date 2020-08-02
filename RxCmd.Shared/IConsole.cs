@@ -6,12 +6,12 @@
 
 namespace RxCmd.Shared
 {
-	public interface IConsole
-	{
-		void Write(string format, params object[] args);
+    public interface IConsole
+    {
+        void Write(string format, params object[] args);
 
-		void WriteLine();
+        void WriteLine();
 
-		void WriteLine(string format, params object[] args);
-	}
+        void WriteLine(string format, params object[] args);
+    }
 }

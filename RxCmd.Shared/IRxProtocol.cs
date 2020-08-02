@@ -4,22 +4,22 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using System;
+
 namespace RxCmd.Shared
 {
-	using System;
+    public interface IRxProtocol
+    {
+        event EventHandler<RxLogEventArgs> RxLog;
 
-	public interface IRxProtocol
-	{
-		event EventHandler<RxLogEventArgs> RxLog;
+        event EventHandler<RxLogEventArgs> RxError;
 
-		event EventHandler<RxLogEventArgs> RxError;
+        void Authorize(string password);
 
-		void Authorize(string password);
+        void Execute(string command);
 
-		void Execute(string command);
+        void Subscribe();
 
-		void Subscribe();
-
-		void Unsubscribe();
-	}
+        void Unsubscribe();
+    }
 }

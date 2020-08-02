@@ -4,17 +4,17 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using System;
+
 namespace RxCmd.Shared
 {
-	using System;
+    public class RxLogEventArgs : EventArgs
+    {
+        public RxLogEventArgs(string message)
+        {
+            Message = message;
+        }
 
-	public class RxLogEventArgs : EventArgs
-	{
-		public RxLogEventArgs(string message)
-		{
-			Message = message;
-		}
-
-		public string Message { get; set; }
-	}
+        public string Message { get; set; }
+    }
 }

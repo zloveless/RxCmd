@@ -4,18 +4,18 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using System;
+
 namespace RxCmd.Shared
 {
-	using System;
+    public class RxRemoteException : Exception
+    {
+        public RxRemoteException(string message) : base(message)
+        {
+        }
 
-	public class RxRemoteException : Exception
-	{
-		public RxRemoteException(string message) : base(message)
-		{
-		}
-
-		public RxRemoteException(string message, Exception innerException) : base(message, innerException)
-		{
-		}
-	}
+        public RxRemoteException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+    }
 }
