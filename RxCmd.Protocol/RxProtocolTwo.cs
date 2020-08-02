@@ -4,12 +4,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using RxCmd.Shared;
+
 namespace RxCmd.Protocol
 {
-	using Shared;
-
-	[RxProtocol, RxProtocolVersion("v002")]
-	public class RxProtocolTwo : RxProtocolOne
-	{
-	}
+    [RxProtocol]
+    [RxProtocolVersion("v002")]
+    public class RxProtocolTwo : RxProtocolOne
+    {
+    }
 }

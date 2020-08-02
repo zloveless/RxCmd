@@ -6,8 +6,8 @@
 
 namespace RxCmd.Shared
 {
-	public interface IRxProtocolAttribute
-	{
-		string Version { get; }
-	}
+    public interface IRxProtocolAttribute
+    {
+        string Version { get; }
+    }
 }

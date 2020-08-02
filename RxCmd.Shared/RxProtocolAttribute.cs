@@ -4,16 +4,16 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+using System;
+using System.ComponentModel.Composition;
+
 namespace RxCmd.Shared
 {
-	using System;
-	using System.ComponentModel.Composition;
-
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class RxProtocolAttribute : ExportAttribute
-	{
-		public RxProtocolAttribute() : base(typeof (IRxProtocol))
-		{
-		}
-	}
+    [AttributeUsage(AttributeTargets.Class)]
+    public class RxProtocolAttribute : ExportAttribute
+    {
+        public RxProtocolAttribute() : base(typeof(IRxProtocol))
+        {
+        }
+    }
 }

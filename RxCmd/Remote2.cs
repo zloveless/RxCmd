@@ -4,6 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+// This file seems to be broken. Bad past-me.
+
+/*
 namespace RxCmd
 {
 	using System;
@@ -318,3 +321,4 @@ namespace RxCmd
 		#endregion
 	}
 }
+*/

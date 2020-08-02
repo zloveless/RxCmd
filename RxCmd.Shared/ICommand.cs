@@ -4,19 +4,22 @@
 //  </copyright>
 // -----------------------------------------------------------------------------
 
+
+using System.ComponentModel.Composition;
+using System.Diagnostics.CodeAnalysis;
+
 namespace RxCmd.Shared
 {
-	using System.ComponentModel.Composition;
+    [InheritedExport(typeof(ICommand))]
+    [SuppressMessage("ReSharper", "UnusedMember.Global", Justification = "This is a shared class library.")]
+    public interface ICommand
+    {
+        string Name { get; }
 
-	[InheritedExport(typeof (ICommand))]
-	public interface ICommand
-	{
-		string Name { get; }
+        string[] Aliases { get; }
 
-		string[] Aliases { get; }
+        string Description { get; }
 
-		string Description { get; }
-
-		void Execute(params object[] args);
-	}
+        void Execute(params object[] args);
+    }
 }
